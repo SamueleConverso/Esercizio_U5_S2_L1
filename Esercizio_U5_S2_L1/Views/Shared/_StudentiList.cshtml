@@ -1,0 +1,31 @@
+﻿@model StudentiViewModel
+
+@if (Model.Studenti != null && Model.Studenti.Count() > 0) {
+	<table id="studentiTable" class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>Nome</th>
+				<th>Cognome</th>
+				<th>Data di nascita</th>
+				<th>Email</th>
+				<th>Dettagli</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var studente in Model.Studenti)
+			{
+				<tr>
+					<td>@studente.Nome</td>
+					<td>@studente.Cognome</td>
+					<td>@studente.DataDiNascita</td>
+					<td>@studente.Email</td>
+					<td>
+						<button onclick="showDetailsModal('@studente.Id')">Dettagli</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+} else {
+	<p class="text-danger">Nessuno studente presente</p>
+}

@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1 class="display-4 text-center">Welcome</h1>
+    
+<div id="tableContainer" class="container"></div>
+
+<div id="detailsModal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="detailsTitle" class="modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="detailsBody"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+		const tableContainer = document.getElementById("tableContainer");
+        document.addEventListener("DOMContentLoaded", async () => { 
+                try {
+                    let response = await fetch('/studenti/get-all');
+                    if (response.ok) {
+                        let data = await response.text();
+                   
+				tableContainer.innerHTML = data;
+                new DataTable('#studentiTable', {ordering: true, columnDefs: [{orderable: true}]});
+                    } else {
+						throw new Error('Errore.');
+                    }
+                } catch(error) {
+                    console.log("Errore: " + error);
+               }
+        });
+
+        async function showDetailsModal(id){
+
+            try {
+                 let response = await fetch(`/studente/details/${id}`);
+                 if (response.ok) {
+                    var detailsObj = await response.json();
+                    console.log(detailsObj);
+                    showModal(detailsObj);
+            } else {
+				throw new Error('Errore.');
+			}
+			} catch(error) {
+				console.log("Errore: " + error);
+            }
+
+           function showModal(response){
+
+                let detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+
+                let title = document.getElementById('detailsTitle');
+                let body = document.getElementById('detailsBody');
+
+                title.textContent = response.nome + " " + response.cognome;
+                body.textContent = response.dataDiNascita + " " + response.email;
+
+                detailsModal.show();
+        }
+
+            
+
+        }
+    </script>
+}
