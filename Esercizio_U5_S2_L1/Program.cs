@@ -16,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<StudenteService>();
 builder.Services.AddScoped<LoggerService>();
 
+LoggerService.ConfigureLogger();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
