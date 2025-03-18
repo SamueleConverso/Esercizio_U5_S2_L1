@@ -1,0 +1,24 @@
+﻿@model UpdateStudenteViewModel
+
+@{
+    <form id="updateForm">
+        <input hidden asp-for="Id" />
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome</label>
+            <input id="nome" type="text" class="form-control" asp-for="Nome" />
+        </div>
+        <div class="mb-3">
+            <label for="cognome" class="form-label">Cognome</label>
+            <input id="cognome" type="text" class="form-control" asp-for="Cognome" />
+        </div>
+        <div class="mb-3">
+            <label for="dataDiNascita" class="form-label">Data di nascita</label>
+            <input id="dataDiNascita" type="date" class="form-control" asp-for="DataDiNascita" />
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input id="email" type="text" class="form-control" asp-for="Email" />
+        </div>
+        <button class="btn btn-success" type="button" onclick="sendUpdateForm()">Modifica</button>
+    </form>
+}

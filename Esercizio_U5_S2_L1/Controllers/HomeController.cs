@@ -53,6 +53,98 @@ namespace Esercizio_U5_S2_L1.Controllers {
             return Json(studenteViewModel);
         }
 
+        [Route("/studente/update/{id:guid}")]
+        public async Task<IActionResult> UpdateStudente(Guid id) {
+            var studente = await _studenteService.GetStudenteByIdAsync(id);
+
+            if (studente == null) {
+                TempData["Error"] = "Error while finding entity on database";
+                return RedirectToAction("Index");
+            }
+
+            var updateStudenteViewModel = new UpdateStudenteViewModel() {
+                Id = studente.Id,
+                Nome = studente.Nome,
+                Cognome = studente.Cognome,
+                DataDiNascita = studente.DataDiNascita,
+                Email = studente.Email
+            };
+
+            return PartialView("_UpdateForm", updateStudenteViewModel);
+        }
+
+        [Route("/studente/update/save")]
+        public async Task<IActionResult> SaveUpdateStudente(UpdateStudenteViewModel updateStudenteViewModel) {
+            var result = await _studenteService.UpdateStudenteAsync(updateStudenteViewModel);
+
+            if (!result) {
+                return Json(new {
+                    success = false,
+                    message = "Error while updating entity on database"
+                });
+            }
+
+            return Json(new {
+                success = true,
+                message = "Update done successfully"
+            });
+            ;
+        }
+
+        [HttpPost]
+        [Route("/studente/delete/{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id) {
+            var result = await _studenteService.DeleteStudenteByIdAsync(id);
+
+            if (!result) {
+                return Json(new {
+                    success = false,
+                    message = "Error while deleting entity"
+                });
+            }
+
+            //string logmessage = "Entity deleted successfully";
+            //_loggerService.LogInformation(logmessage);
+
+            return Json(new {
+                success = true,
+                message = "Success"
+            });
+        }
+
+        [Route("/studente/add")]
+        public IActionResult Add() {
+            return PartialView("_AddForm");
+        }
+
+        [HttpPost]
+        [Route("/studente/add")]
+        public async Task<IActionResult> Add(AddStudenteViewModel addStudenteViewModel) {
+            if (!ModelState.IsValid) {
+                return Json(new {
+                    success = false,
+                    message = "Error while saving entity to database"
+                });
+            }
+
+            var result = await _studenteService.AddStudenteAsync(addStudenteViewModel);
+
+            if (!result) {
+                return Json(new {
+                    success = false,
+                    message = "Error while saving entity to database"
+                });
+            }
+
+            //string logmessage = "Entity saved successfully to database";
+
+            //_loggerService.LogInformation(logmessage);
+            return Json(new {
+                success = true,
+                message = "Success"
+            });
+        }
+
         public IActionResult Privacy() {
             return View();
         }
