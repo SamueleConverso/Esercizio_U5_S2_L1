@@ -8,10 +8,12 @@ namespace Esercizio_U5_S2_L1.Controllers {
     public class HomeController : Controller {
         private readonly ILogger<HomeController> _logger;
         private readonly StudenteService _studenteService;
+        private readonly LoggerService _loggerService;
 
-        public HomeController(ILogger<HomeController> logger, StudenteService studenteService) {
+        public HomeController(ILogger<HomeController> logger, StudenteService studenteService, LoggerService loggerService) {
             _logger = logger;
             _studenteService = studenteService;
+            _loggerService = loggerService;
         }
 
         public IActionResult Index() {
@@ -27,7 +29,7 @@ namespace Esercizio_U5_S2_L1.Controllers {
                 //};
                 return PartialView("_StudentiList", studenti);
             } catch (Exception ex) {
-                _logger.LogError(ex, "Errore durante il caricamento degli studenti");
+                //_logger.LogError(ex, "Errore durante il caricamento degli studenti");
                 return StatusCode(500);
             }
 
@@ -103,12 +105,12 @@ namespace Esercizio_U5_S2_L1.Controllers {
                 });
             }
 
-            //string logmessage = "Entity deleted successfully";
-            //_loggerService.LogInformation(logmessage);
+            string logmessage = "Entity deleted successfully";
+            _loggerService.LogInformation(logmessage);
 
             return Json(new {
                 success = true,
-                message = "Success"
+                message = logmessage
             });
         }
 
@@ -136,12 +138,12 @@ namespace Esercizio_U5_S2_L1.Controllers {
                 });
             }
 
-            //string logmessage = "Entity saved successfully to database";
+            string logmessage = "Entity saved successfully to database";
 
-            //_loggerService.LogInformation(logmessage);
+            _loggerService.LogInformation(logmessage);
             return Json(new {
                 success = true,
-                message = "Success"
+                message = logmessage
             });
         }
 

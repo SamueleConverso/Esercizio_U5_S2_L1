@@ -6,9 +6,11 @@ using Esercizio_U5_S2_L1.Models;
 namespace Esercizio_U5_S2_L1.Services {
     public class StudenteService {
         private readonly AppDbContext _context;
+        private readonly LoggerService _loggerService;
 
-        public StudenteService(AppDbContext context) {
+        public StudenteService(AppDbContext context, LoggerService loggerService) {
             this._context = context;
+            _loggerService = loggerService;
         }
 
         private async Task<bool> SaveAsync() {
@@ -21,7 +23,7 @@ namespace Esercizio_U5_S2_L1.Services {
                     return false;
                 }
             } catch (Exception ex) {
-                //_loggerService.LogError(ex.Message);
+                _loggerService.LogError(ex.Message);
                 return false;
             }
         }
@@ -65,7 +67,7 @@ namespace Esercizio_U5_S2_L1.Services {
 
                 return await SaveAsync();
             } catch (Exception ex) {
-                //_loggerService.LogError(ex.Message);
+                _loggerService.LogError(ex.Message);
                 return false;
             }
         }
@@ -75,7 +77,7 @@ namespace Esercizio_U5_S2_L1.Services {
                 var studente = await _context.Studenti.FindAsync(id);
 
                 if (studente == null) {
-                    //_loggerService.LogWarning($"Product not found");
+                    _loggerService.LogWarning($"Product not found");
                     return false;
                 }
 
@@ -83,7 +85,7 @@ namespace Esercizio_U5_S2_L1.Services {
 
                 return await SaveAsync();
             } catch (Exception ex) {
-                //_loggerService.LogError(ex.Message);
+                _loggerService.LogError(ex.Message);
                 return false;
             }
         }
@@ -102,7 +104,7 @@ namespace Esercizio_U5_S2_L1.Services {
 
                 return await SaveAsync();
             } catch (Exception ex) {
-                //_loggerService.LogError(ex.Message);
+                _loggerService.LogError(ex.Message);
                 return false;
             }
         }

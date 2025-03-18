@@ -14,6 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 );
 
 builder.Services.AddScoped<StudenteService>();
+builder.Services.AddScoped<LoggerService>();
 
 var app = builder.Build();
 
