@@ -4,6 +4,7 @@ using Esercizio_U5_S2_L1.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Esercizio_U5_S2_L1.Models;
+using FluentEmail.MailKitSmtp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,11 +37,23 @@ builder.Services.AddAuthentication(options => {
     options.ExpireTimeSpan = TimeSpan.FromDays(1);
 });
 
+builder.Services.AddFluentEmail(builder.Configuration.GetSection("MailSettings").GetValue<string>("FromDefault"))
+    .AddRazorRenderer()
+    .AddMailKitSender(new SmtpClientOptions() {
+        Server = builder.Configuration.GetSection("MailSettings").GetValue<string>("Server"),
+        Port = builder.Configuration.GetSection("MailSettings").GetValue<int>("Port"),
+        User = builder.Configuration.GetSection("MailSettings").GetValue<string>("Username"),
+        Password = builder.Configuration.GetSection("MailSettings").GetValue<string>("Password"),
+        UseSsl = builder.Configuration.GetSection("MailSettings").GetValue<bool>("UseSsl"),
+        RequiresAuthentication = builder.Configuration.GetSection("MailSettings").GetValue<bool>("RequiresAuthentication"),
+    });
+
 builder.Services.AddScoped<StudenteService>();
 builder.Services.AddScoped<LoggerService>();
 builder.Services.AddScoped<UserManager<ApplicationUser>>();
 builder.Services.AddScoped<SignInManager<ApplicationUser>>();
 builder.Services.AddScoped<RoleManager<ApplicationRole>>();
+builder.Services.AddScoped<EmailService>();
 
 LoggerService.ConfigureLogger();
 
