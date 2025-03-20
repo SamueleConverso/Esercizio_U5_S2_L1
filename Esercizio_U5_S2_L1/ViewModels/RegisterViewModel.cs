@@ -7,33 +7,44 @@ namespace Esercizio_U5_S2_L1.ViewModels {
             get; set;
         }
 
-        [Required]
-        [EmailAddress]
+        [Display(Name = "Email (sarà il tuo username")]
+        [Required(ErrorMessage = "L'indirizzo email è obbligatorio.")]
+        [EmailAddress(ErrorMessage = "Inserisci un indirizzo email valido.")]
         public required string Email {
             get; set;
         }
 
-        [Required]
+        [Display(Name = "Nome")]
+        [Required(ErrorMessage = "Il nome è obbligatorio.")]
         public required string FirstName {
             get; set;
         }
 
-        [Required]
+        [Display(Name = "Cognome")]
+        [Required(ErrorMessage = "Il cognome è obbligatorio.")]
         public required string LastName {
             get; set;
         }
 
-        [Required]
-        public DateOnly BirthDate {
+        [Display(Name = "Data di nascita")]
+        [Required(ErrorMessage = "La data di nascita è obbligatoria.")]
+        [DataType(DataType.Date)]
+        public required DateOnly BirthDate {
             get; set;
         }
 
-        [Required]
+        [Display(Name = "Password")]
+        [Required(ErrorMessage = "La password è obbligatoria.")]
+        [DataType(DataType.Password)]
+        [MinLength(8, ErrorMessage = "La password deve contenere almeno 8 caratteri.")]
         public required string Password {
             get; set;
         }
 
-        [Compare(nameof(Password), ErrorMessage = "Password and confirmation password do not match.")]
+        [Display(Name = "Conferma password")]
+        [Required(ErrorMessage = "Conferma la tua password.")]
+        [Compare(nameof(Password), ErrorMessage = "Le password non corrispondono.")]
+        [DataType(DataType.Password)]
         public required string ConfirmPassword {
             get; set;
         }

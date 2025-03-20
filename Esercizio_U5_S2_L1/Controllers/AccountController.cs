@@ -30,6 +30,7 @@ namespace Esercizio_U5_S2_L1.Controllers {
         public async Task<IActionResult> Register(RegisterViewModel model) {
 
             if (!ModelState.IsValid) {
+                ModelState.AddModelError(string.Empty, "Compila correttamente i campi.");
                 return View(model);
             }
 
