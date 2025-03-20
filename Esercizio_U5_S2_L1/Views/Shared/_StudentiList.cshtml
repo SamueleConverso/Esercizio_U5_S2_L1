@@ -1,4 +1,5 @@
-﻿@model StudentiViewModel
+﻿@using System.Security.Claims
+@model StudentiViewModel
 
 @if (Model.Studenti != null && Model.Studenti.Count() > 0 && User.Identity.IsAuthenticated && User.IsInRole("Docente")) {
 	<table id="studentiTable" class="table table-bordered table-striped">
@@ -24,9 +25,13 @@
 					<td>@studente.ApplicationUser.FirstName @studente.ApplicationUser.LastName</td>
 					<td>@studente.CreatedAt</td>
 					<td>
+					@if(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value == studente.ApplicationUser.Email) {
 						<button onclick="showDetailsModal('@studente.Id')">Dettagli</button>
 						<button onclick="showUpdateModal('@studente.Id')">Modifica</button>
 						<button class="btn btn-sm btn-danger" onclick="showDeleteModal('@studente.Id')">Elimina</button>
+					} else {
+						<p class="text-danger">Nessuna azione permessa.</p>
+					}
 					</td>
 				</tr>
 			}
