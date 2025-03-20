@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Esercizio_U5_S2_L1.Models;
 using FluentEmail.MailKitSmtp;
+using MailKit.Net.Smtp;
+using MimeKit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,12 +50,15 @@ builder.Services.AddFluentEmail(builder.Configuration.GetSection("MailSettings")
         RequiresAuthentication = builder.Configuration.GetSection("MailSettings").GetValue<bool>("RequiresAuthentication"),
     });
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 builder.Services.AddScoped<StudenteService>();
 builder.Services.AddScoped<LoggerService>();
 builder.Services.AddScoped<UserManager<ApplicationUser>>();
 builder.Services.AddScoped<SignInManager<ApplicationUser>>();
 builder.Services.AddScoped<RoleManager<ApplicationRole>>();
 builder.Services.AddScoped<EmailService>();
+builder.Services.AddTransient<GmailService>();
 
 LoggerService.ConfigureLogger();
 

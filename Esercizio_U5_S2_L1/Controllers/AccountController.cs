@@ -13,13 +13,15 @@ namespace Esercizio_U5_S2_L1.Controllers {
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly EmailService _emailService;
         private readonly IFluentEmail _fluentEmail;
+        private readonly GmailService _gmailService;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, EmailService emailService, IFluentEmail fluentEmail) {
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager, EmailService emailService, IFluentEmail fluentEmail, GmailService gmailService) {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _emailService = emailService;
             _fluentEmail = fluentEmail;
+            _gmailService = gmailService;
         }
 
         public IActionResult Register() {
@@ -64,7 +66,8 @@ namespace Esercizio_U5_S2_L1.Controllers {
                 token = encodedToken
             }, Request.Scheme);
 
-            var emailSent = await _emailService.SendEmail(user.FirstName, user.LastName, user.Email, confirmationLink);
+            //var emailSent = await _emailService.SendEmail(user.FirstName, user.LastName, user.Email, confirmationLink);
+            var emailSent = await _gmailService.SendEmailAsync(user.FirstName, user.LastName, user.Email, confirmationLink);
 
             if (!emailSent) {
                 ModelState.AddModelError(string.Empty, "Errore nell'invio dell'email di conferma.");
