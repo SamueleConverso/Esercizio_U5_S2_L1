@@ -30,13 +30,21 @@ namespace Esercizio_U5_S2_L1.Controllers {
             _sendGridService = sendGridService;
         }
 
+        private bool VerifyAuth() {
+            return User.Identity.IsAuthenticated;
+        }
+
+
+        [AllowAnonymous]
         public IActionResult Register() {
+            if (VerifyAuth()) {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model) {
-
             if (!ModelState.IsValid) {
                 ModelState.AddModelError(string.Empty, "Compila correttamente i campi.");
                 return View(model);
@@ -87,6 +95,10 @@ namespace Esercizio_U5_S2_L1.Controllers {
             return RedirectToAction(nameof(RegistrationConfirmation));
         }
 
+        public IActionResult RegistrationConfirmation() {
+            return View();
+        }
+
         public async Task<IActionResult> ConfirmEmail(string userEmail, string token) {
             if (userEmail == null || token == null) {
                 return RedirectToAction("Index", "Home");
@@ -107,12 +119,11 @@ namespace Esercizio_U5_S2_L1.Controllers {
             }
         }
 
-        public IActionResult RegistrationConfirmation() {
-            return View();
-        }
-
         [AllowAnonymous]
         public IActionResult Login() {
+            if (VerifyAuth()) {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -126,19 +137,17 @@ namespace Esercizio_U5_S2_L1.Controllers {
 
             var signInResult = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, false);
 
-
-
             List<Claim> claims = new List<Claim>();
 
             claims.Add(new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"));
 
             claims.Add(new Claim(ClaimTypes.Email, user.Email));
 
-            //var roles = await _signInManager.UserManager.GetRolesAsync(user);
+            var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
-            //foreach (var role in roles) {
-            //    claims.Add(new Claim(ClaimTypes.Role, role));
-            //}
+            foreach (var role in roles) {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -154,6 +163,16 @@ namespace Esercizio_U5_S2_L1.Controllers {
 
         [Authorize]
         public async Task<IActionResult> Logout() {
+            await _signInManager.SignOutAsync();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Delete() {
+            var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
+            await _userManager.DeleteAsync(user);
+
             await _signInManager.SignOutAsync();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");

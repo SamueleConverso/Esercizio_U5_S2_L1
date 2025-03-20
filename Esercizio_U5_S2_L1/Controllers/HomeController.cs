@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Esercizio_U5_S2_L1.Models;
 using Esercizio_U5_S2_L1.Services;
 using Esercizio_U5_S2_L1.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Esercizio_U5_S2_L1.Controllers {
@@ -147,9 +148,9 @@ namespace Esercizio_U5_S2_L1.Controllers {
             });
         }
 
-        public IActionResult Privacy() {
-            return View();
-        }
+        //public IActionResult Privacy() {
+        //    return View();
+        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error() {

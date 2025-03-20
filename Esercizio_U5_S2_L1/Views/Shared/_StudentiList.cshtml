@@ -1,6 +1,6 @@
 ﻿@model StudentiViewModel
 
-@if (Model.Studenti != null && Model.Studenti.Count() > 0) {
+@if (Model.Studenti != null && Model.Studenti.Count() > 0 && User.Identity.IsAuthenticated && User.IsInRole("Docente")) {
 	<table id="studentiTable" class="table table-bordered table-striped">
 		<thead>
 			<tr>
@@ -29,5 +29,5 @@
 		</tbody>
 	</table>
 } else {
-	<p class="text-danger">Nessuno studente presente</p>
+	<p class="text-danger">Nessuno studente presente o non sei loggato o non hai i permessi di accesso per visualizzare la tabella studenti.</p>
 }
