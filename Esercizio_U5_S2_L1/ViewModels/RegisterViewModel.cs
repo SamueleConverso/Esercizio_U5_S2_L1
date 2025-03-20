@@ -7,7 +7,7 @@ namespace Esercizio_U5_S2_L1.ViewModels {
             get; set;
         }
 
-        [Display(Name = "Email (sarà il tuo username")]
+        [Display(Name = "Email (sarà il tuo username)")]
         [Required(ErrorMessage = "L'indirizzo email è obbligatorio.")]
         [EmailAddress(ErrorMessage = "Inserisci un indirizzo email valido.")]
         public required string Email {
