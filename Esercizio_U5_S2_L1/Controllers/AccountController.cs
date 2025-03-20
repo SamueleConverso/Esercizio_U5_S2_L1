@@ -1,10 +1,14 @@
-﻿using System.Web;
+﻿using System.Security.Claims;
+using System.Web;
 using Esercizio_U5_S2_L1.Models;
 using Esercizio_U5_S2_L1.Services;
 using Esercizio_U5_S2_L1.ViewModels;
 using FluentEmail.Core;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Esercizio_U5_S2_L1.Controllers {
     public class AccountController : Controller {
@@ -59,12 +63,15 @@ namespace Esercizio_U5_S2_L1.Controllers {
                 return View(model);
             }
 
+            var userForRole = await _userManager.FindByEmailAsync(user.Email);
+            await _userManager.AddToRoleAsync(userForRole, "Studente");
+
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var encodedToken = HttpUtility.UrlEncode(token);
 
 
             var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new {
-                userId = user.Id,
+                userEmail = user.Email,
                 token = encodedToken
             }, Request.Scheme);
 
@@ -80,12 +87,12 @@ namespace Esercizio_U5_S2_L1.Controllers {
             return RedirectToAction(nameof(RegistrationConfirmation));
         }
 
-        public async Task<IActionResult> ConfirmEmail(string userId, string token) {
-            if (userId == null || token == null) {
+        public async Task<IActionResult> ConfirmEmail(string userEmail, string token) {
+            if (userEmail == null || token == null) {
                 return RedirectToAction("Index", "Home");
             }
 
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByEmailAsync(userEmail);
             if (user == null) {
                 return RedirectToAction("Index", "Home");
             }
@@ -104,6 +111,53 @@ namespace Esercizio_U5_S2_L1.Controllers {
             return View();
         }
 
+        [AllowAnonymous]
+        public IActionResult Login() {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel) {
+            var user = await _userManager.FindByEmailAsync(loginViewModel.Email);
+
+            if (user == null) {
+                return View();
+            }
+
+            var signInResult = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, false);
+
+
+
+            List<Claim> claims = new List<Claim>();
+
+            claims.Add(new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"));
+
+            claims.Add(new Claim(ClaimTypes.Email, user.Email));
+
+            //var roles = await _signInManager.UserManager.GetRolesAsync(user);
+
+            //foreach (var role in roles) {
+            //    claims.Add(new Claim(ClaimTypes.Role, role));
+            //}
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
+
+            if (!signInResult.Succeeded) {
+                return View();
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Logout() {
+            await _signInManager.SignOutAsync();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
 
