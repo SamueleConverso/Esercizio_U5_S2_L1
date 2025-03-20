@@ -18,7 +18,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 );
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => {
-    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedAccount = true;
     options.Password.RequiredLength = 8;
     options.Password.RequireDigit = false;
     options.Password.RequireLowercase = false;

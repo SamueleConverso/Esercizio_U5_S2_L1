@@ -1,0 +1,19 @@
+﻿@using Esercizio_U5_S2_L1.ViewModels
+@model ConfirmationEmailViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Conferma Registrazione</title>
+</head>
+<body>
+    <h1>Ciao @Model.FirstName @Model.LastName,</h1>
+    <p>Grazie per esserti registrato. Per favore, conferma il tuo indirizzo email cliccando sul link qui sotto:</p>
+    <p>
+        <a href="@Model.ConfirmationLink">Conferma Email</a>
+    </p>
+    <p>Se non hai richiesto questa email, puoi ignorarla.</p>
+    <p>Saluti,<br />Il Team</p>
+</body>
+</html>

@@ -9,13 +9,15 @@ namespace Esercizio_U5_S2_L1.Services {
             _fluentEmail = fluentEmail;
         }
 
-        public async Task<bool> SendEmail(string username) {
-            var emailViewModel = new EmailViewModel() {
-                Username = username,
+        public async Task<bool> SendEmail(string username, string lastName, string confirmationLink) {
+            var emailViewModel = new ConfirmationEmailViewModel() {
+                FirstName = username,
+                LastName = lastName,
+                ConfirmationLink = confirmationLink
             };
 
             var res = await _fluentEmail.To("samu.converso@gmail.com").Subject("New product")
-                .UsingTemplateFromFile("Views/Templates/EmailTemplate.cshtml", emailViewModel)
+                .UsingTemplateFromFile("Views/Templates/ConfirmationEmail.cshtml", emailViewModel)
                 .SendAsync();
 
             return res.Successful;
