@@ -52,7 +52,7 @@ namespace Esercizio_U5_S2_L1.Controllers {
                 token = encodedToken
             }, Request.Scheme);
 
-            await _emailService.SendEmail(user.FirstName, user.LastName, confirmationLink);
+            await _emailService.SendEmail(user.FirstName, user.LastName, user.Email, confirmationLink);
 
             return RedirectToAction(nameof(RegistrationConfirmation));
         }
