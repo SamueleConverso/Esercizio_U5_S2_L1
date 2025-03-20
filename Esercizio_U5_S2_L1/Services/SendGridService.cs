@@ -7,7 +7,7 @@ namespace Esercizio_U5_S2_L1.Services {
     public class SendGridService {
 
         public async Task<bool> SendEmailAsync(string userEmail) {
-            var apiKey = "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";
+            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("samu.converso@gmail.com", "Samuele Converso");
             var subject = "Conferma registrazione";
