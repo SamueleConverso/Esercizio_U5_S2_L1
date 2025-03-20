@@ -32,6 +32,21 @@ namespace Esercizio_U5_S2_L1.Services {
                 smtp.ServerCertificateValidationCallback = (s, c, h, e) => true; //Da togliere in produzione
                 //Da togliere in produzione
 
+                //smtp.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => {
+                //    if (sslPolicyErrors == System.Net.Security.SslPolicyErrors.None)
+                //        return true;
+
+                //    Console.WriteLine($"Errore di validazione SSL: {sslPolicyErrors}");
+
+                //    if (chain != null) {
+                //        foreach (var status in chain.ChainStatus) {
+                //            Console.WriteLine($"Status: {status.StatusInformation}, Error: {status.Status}");
+                //        }
+                //    }
+
+                //    return false;
+                //};
+
                 await smtp.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
                 await smtp.AuthenticateAsync(_emailSettings.UserName, _emailSettings.Password);
                 await smtp.SendAsync(email);
