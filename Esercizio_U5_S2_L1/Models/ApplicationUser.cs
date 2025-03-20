@@ -21,5 +21,9 @@ namespace Esercizio_U5_S2_L1.Models {
         public ICollection<ApplicationUserRole> ApplicationUserRoles {
             get; set;
         }
+
+        public ICollection<Studente> Studenti {
+            get; set;
+        }
     }
 }

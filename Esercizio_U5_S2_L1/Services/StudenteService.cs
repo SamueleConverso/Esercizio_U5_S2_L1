@@ -2,15 +2,21 @@
 using Esercizio_U5_S2_L1.Data;
 using Microsoft.EntityFrameworkCore;
 using Esercizio_U5_S2_L1.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Esercizio_U5_S2_L1.Services {
     public class StudenteService {
         private readonly AppDbContext _context;
         private readonly LoggerService _loggerService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public StudenteService(AppDbContext context, LoggerService loggerService) {
+        public StudenteService(AppDbContext context, LoggerService loggerService, UserManager<ApplicationUser> userManager) {
             this._context = context;
             _loggerService = loggerService;
+            _userManager = userManager;
         }
 
         private async Task<bool> SaveAsync() {
@@ -32,7 +38,7 @@ namespace Esercizio_U5_S2_L1.Services {
             var studenti = new StudentiViewModel();
 
             try {
-                studenti.Studenti = await _context.Studenti.ToListAsync();
+                studenti.Studenti = await _context.Studenti.Include(s => s.ApplicationUser).ToListAsync();
             } catch (Exception ex) {
                 studenti.Studenti = null;
                 Console.WriteLine(ex.Message);
@@ -90,14 +96,17 @@ namespace Esercizio_U5_S2_L1.Services {
             }
         }
 
-        public async Task<bool> AddStudenteAsync(AddStudenteViewModel addStudenteViewModel) {
+        public async Task<bool> AddStudenteAsync(AddStudenteViewModel addStudenteViewModel, ClaimsPrincipal claimsPrincipal) {
+            var applicationUser = await _userManager.FindByEmailAsync(claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value);
+
             try {
                 var studente = new Studente() {
                     Id = Guid.NewGuid(),
                     Nome = addStudenteViewModel.Nome,
                     Cognome = addStudenteViewModel.Cognome,
                     DataDiNascita = addStudenteViewModel.DataDiNascita,
-                    Email = addStudenteViewModel.Email
+                    Email = addStudenteViewModel.Email,
+                    ApplicationUserId = applicationUser.Id,
                 };
 
                 _context.Studenti.Add(studente);

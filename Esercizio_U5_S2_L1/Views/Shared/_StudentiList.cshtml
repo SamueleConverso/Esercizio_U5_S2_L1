@@ -8,6 +8,8 @@
 				<th>Cognome</th>
 				<th>Data di nascita</th>
 				<th>Email</th>
+				<th>Inserito da</th>
+				<th>Data inserimento</th>
 				<th>Azioni</th>
 			</tr>
 		</thead>
@@ -19,6 +21,8 @@
 					<td>@studente.Cognome</td>
 					<td>@studente.DataDiNascita</td>
 					<td>@studente.Email</td>
+					<td>@studente.ApplicationUser.FirstName @studente.ApplicationUser.LastName</td>
+					<td>@studente.CreatedAt</td>
 					<td>
 						<button onclick="showDetailsModal('@studente.Id')">Dettagli</button>
 						<button onclick="showUpdateModal('@studente.Id')">Modifica</button>

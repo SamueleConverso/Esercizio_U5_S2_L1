@@ -36,6 +36,10 @@ namespace Esercizio_U5_S2_L1.Data {
             modelBuilder.Entity<ApplicationUserRole>().HasOne(ur => ur.Role).WithMany(r => r.ApplicationUserRole).HasForeignKey(ur => ur.RoleId);
 
             modelBuilder.Entity<ApplicationUserRole>().Property(p => p.Date).HasDefaultValueSql("GETDATE()").IsRequired(true);
+
+            modelBuilder.Entity<Studente>().HasOne(s => s.ApplicationUser).WithMany(u => u.Studenti).HasForeignKey(s => s.ApplicationUserId);
+
+            modelBuilder.Entity<Studente>().Property(p => p.CreatedAt).HasDefaultValueSql("GETDATE()").IsRequired(true);
         }
     }
 }

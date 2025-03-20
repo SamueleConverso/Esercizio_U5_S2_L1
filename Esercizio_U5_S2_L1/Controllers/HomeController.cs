@@ -4,6 +4,7 @@ using Esercizio_U5_S2_L1.Services;
 using Esercizio_U5_S2_L1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Esercizio_U5_S2_L1.Controllers {
     public class HomeController : Controller {
@@ -130,7 +131,7 @@ namespace Esercizio_U5_S2_L1.Controllers {
                 });
             }
 
-            var result = await _studenteService.AddStudenteAsync(addStudenteViewModel);
+            var result = await _studenteService.AddStudenteAsync(addStudenteViewModel, User);
 
             if (!result) {
                 return Json(new {

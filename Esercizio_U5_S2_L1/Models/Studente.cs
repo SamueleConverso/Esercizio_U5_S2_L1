@@ -28,5 +28,18 @@ namespace Esercizio_U5_S2_L1.Models {
         public string Email {
             get; set;
         }
+
+        public DateTime CreatedAt {
+            get; set;
+        }
+
+        public string ApplicationUserId {
+            get; set;
+        }
+
+        [ForeignKey("ApplicationUserId")]
+        public ApplicationUser ApplicationUser {
+            get; set;
+        }
     }
 }
