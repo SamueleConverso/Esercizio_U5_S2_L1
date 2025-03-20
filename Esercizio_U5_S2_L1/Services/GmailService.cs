@@ -54,7 +54,6 @@ namespace Esercizio_U5_S2_L1.Services {
 
                 return true;
             } catch (Exception ex) {
-                // Log dell'errore (implementa un logger appropriato)
                 Console.WriteLine($"Errore nell'invio dell'email: {ex.Message}");
                 return false;
             }
