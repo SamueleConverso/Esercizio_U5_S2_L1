@@ -70,7 +70,7 @@ namespace Esercizio_U5_S2_L1.Controllers {
 
             //var emailSent = await _emailService.SendEmail(user.FirstName, user.LastName, user.Email, confirmationLink);
             //var emailSent = await _gmailService.SendEmailAsync(user.FirstName, user.LastName, user.Email, confirmationLink);
-            var emailSent = await _sendGridService.SendEmailAsync(user.Email);
+            var emailSent = await _sendGridService.SendEmailAsync(user.FirstName, user.LastName, user.Email, confirmationLink);
 
             if (!emailSent) {
                 ModelState.AddModelError(string.Empty, "Errore nell'invio dell'email di conferma.");
