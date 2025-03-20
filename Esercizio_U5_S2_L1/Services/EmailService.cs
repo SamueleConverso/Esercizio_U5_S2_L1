@@ -16,7 +16,7 @@ namespace Esercizio_U5_S2_L1.Services {
                 ConfirmationLink = confirmationLink
             };
 
-            var res = await _fluentEmail.To("samu.converso@gmail.com").Subject("New product")
+            var res = await _fluentEmail.To("samu.converso@gmail.com").Subject("Conferma registrazione")
                 .UsingTemplateFromFile("Views/Templates/ConfirmationEmail.cshtml", emailViewModel)
                 .SendAsync();
 
