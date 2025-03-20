@@ -5,6 +5,8 @@
 }
 
 <form asp-controller="Account" asp-action="Register">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
     <input placeholder="Nome" asp-for="@Model.FirstName" />
     <input placeholder="Cognome"  asp-for="@Model.LastName" />
     <input placeholder="Email"  asp-for="@Model.Email" />
@@ -13,3 +15,7 @@
     <input placeholder="Conferma password" type="password" asp-for="@Model.ConfirmPassword" />
     <button>Register</button>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

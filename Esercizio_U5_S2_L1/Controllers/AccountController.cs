@@ -29,6 +29,10 @@ namespace Esercizio_U5_S2_L1.Controllers {
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model) {
 
+            if (!ModelState.IsValid) {
+                return View(model);
+            }
+
             var user = new ApplicationUser {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -39,8 +43,15 @@ namespace Esercizio_U5_S2_L1.Controllers {
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
+            //if (!result.Succeeded) {
+            //    return View();
+            //}
+
             if (!result.Succeeded) {
-                return View();
+                foreach (var error in result.Errors) {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(model);
             }
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -52,7 +63,12 @@ namespace Esercizio_U5_S2_L1.Controllers {
                 token = encodedToken
             }, Request.Scheme);
 
-            await _emailService.SendEmail(user.FirstName, user.LastName, user.Email, confirmationLink);
+            var emailSent = await _emailService.SendEmail(user.FirstName, user.LastName, user.Email, confirmationLink);
+
+            if (!emailSent) {
+                ModelState.AddModelError(string.Empty, "Errore nell'invio dell'email di conferma.");
+                return View(model);
+            }
 
             return RedirectToAction(nameof(RegistrationConfirmation));
         }
