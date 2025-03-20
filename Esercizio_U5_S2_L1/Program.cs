@@ -59,6 +59,7 @@ builder.Services.AddScoped<SignInManager<ApplicationUser>>();
 builder.Services.AddScoped<RoleManager<ApplicationRole>>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddTransient<GmailService>();
+builder.Services.AddScoped<SendGridService>();
 
 LoggerService.ConfigureLogger();
 
